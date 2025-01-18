@@ -42,11 +42,11 @@ class CaliperProcessor(
                         appendLine("from package: ${info.packageName}")
                         appendLine("### properties")
                         info.properties.forEach { property ->
-                            appendLine("- `${property.name}` : ${property.type}")
+                            appendLine("- `${property.name}` : `${property.type.rawName}${property.type.typeArguments.joinToString(prefix = "<", postfix = ">"){it.rawName} }`")
                         }
                         appendLine("### functions")
                         info.functions.forEach { function ->
-                            appendLine("- fun `${function.name}` (${function.parameters.joinToString { "`${it.name}` : ${it.type}" }}) : ${function.returnType}")
+                            appendLine("- fun `${function.name}` (${function.parameters.joinToString { "`${it.name}` : `${it.type.rawName}${it.type.typeArguments.joinToString(prefix = "<", postfix = ">"){it.rawName}}`" }}) : `${function.returnType.rawName}${function.returnType.typeArguments.joinToString(prefix = "<", postfix = ">"){it.rawName}}`")
                         }
                         appendLine("---")
                     }

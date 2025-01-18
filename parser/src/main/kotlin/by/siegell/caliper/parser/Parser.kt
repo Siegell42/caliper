@@ -1,9 +1,6 @@
 package by.siegell.caliper.parser
 
-import by.siegell.caliper.domain.CaliperClassInfo
-import by.siegell.caliper.domain.CaliperFunctionInfo
-import by.siegell.caliper.domain.CaliperParameterInfo
-import by.siegell.caliper.domain.CaliperPropertyInfo
+import by.siegell.caliper.domain.*
 import com.google.devtools.ksp.symbol.*
 
 class Parser {
@@ -24,7 +21,7 @@ class Parser {
     private fun analyzeProperty(ksProperty: KSPropertyDeclaration) = with(ksProperty) {
         CaliperPropertyInfo(
             name = simpleName.asString(),
-            type = type.asString()
+            type = type.toCaliperType()
         )
     }
 
@@ -32,7 +29,7 @@ class Parser {
         CaliperFunctionInfo(
             name = simpleName.asString(),
             parameters = parameters.map { analyzeParameter(it) },
-            returnType = returnType.asString(),
+            returnType = returnType.toCaliperType(),
             body = null
         )
     }
@@ -40,9 +37,41 @@ class Parser {
     private fun analyzeParameter(ksValueParameter: KSValueParameter) = with(ksValueParameter) {
         CaliperParameterInfo(
             name = name?.asString().orEmpty(),
-            type = type.asString()
+            type = type.toCaliperType()
         )
     }
 
-    private fun KSTypeReference?.asString(): String = this?.resolve()?.declaration?.qualifiedName?.asString().orEmpty()
+    private fun KSTypeReference?.toCaliperType(): CaliperType {
+        if (this == null) {
+            return CaliperType(
+                rawName = "Unit",
+                typeArguments = emptyList()
+            )
+        }
+
+        val resolvedType = resolve()
+        val declaration = resolvedType.declaration
+        val rawName = declaration.simpleName.asString()
+
+        val arguments = resolvedType.arguments.map { it.toCaliperType() }
+
+        return CaliperType(
+            rawName = rawName,
+            typeArguments = arguments
+            // variance и starProjection здесь тоже можно учесть
+        )
+    }
+
+    private fun KSTypeArgument.toCaliperType(): CaliperType {
+        if (variance == Variance.STAR || type == null) {
+            return CaliperType("*", emptyList(), isStarProjection = true)
+        }
+        val varianceLabel = when (variance) {
+            Variance.COVARIANT -> "out"
+            Variance.CONTRAVARIANT -> "in"
+            else -> null
+        }
+        val ref = type.toCaliperType()
+        return ref.copy(variance = varianceLabel)
+    }
 }
