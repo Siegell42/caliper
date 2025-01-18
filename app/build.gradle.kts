@@ -7,6 +7,8 @@ plugins {
 dependencies {
     api(project(":processor"))
     ksp(project(":processor"))
+
+    api(project(":domain"))
 }
 
 application {

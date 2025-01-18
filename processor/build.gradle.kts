@@ -11,4 +11,5 @@ dependencies {
     testImplementation(kotlin("test"))
 
     implementation(libs.kotlinSymbolProcessing.api)
+    implementation(project(":domain"))
 }

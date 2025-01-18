@@ -8,3 +8,4 @@ dependencyResolutionManagement {
 rootProject.name = "caliper"
 include(":app")
 include(":processor")
+include(":domain")

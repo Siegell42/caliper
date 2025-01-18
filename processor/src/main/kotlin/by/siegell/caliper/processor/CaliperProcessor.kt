@@ -28,7 +28,7 @@ class CaliperProcessor(
             fileName = "report",
             extensionName = "md"
         ).use { fileOutput ->
-            val symbols = resolver.getSymbolsWithAnnotation("by.siegell.caliper.processor.CaliperTarget")
+            val symbols = resolver.getSymbolsWithAnnotation("by.siegell.caliper.domain.CaliperTarget")
             val content = buildString {
                 appendLine("# Caliper report")
                 symbols.forEach {
