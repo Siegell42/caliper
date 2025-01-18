@@ -5,6 +5,8 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.bundles.kotlinxEcosystem)
+
     api(project(":processor"))
     ksp(project(":processor"))
 

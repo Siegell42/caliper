@@ -8,5 +8,5 @@ package by.siegell.caliper.domain
  */
 data class CaliperParameterInfo(
     val name: String,
-    val type: String
+    val type: CaliperType
 )
