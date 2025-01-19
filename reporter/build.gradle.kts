@@ -4,10 +4,7 @@ plugins {
 
 dependencies {
     implementation(libs.bundles.kotlinxEcosystem)
-    testImplementation(kotlin("test"))
 
     implementation(libs.kotlinSymbolProcessing.api)
     implementation(project(":domain"))
-    implementation(project(":parser"))
-    implementation(project(":reporter"))
 }
